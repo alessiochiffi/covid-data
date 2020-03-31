@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{ nation }}</h2>
+    <h2 class="nation">{{ nation }}</h2>
     <v-row align="center" justify="start">
       <v-col cols="6" md="3">
         <InfoBox :detail="'+'+increaseNum()" description="Last 24h"></InfoBox>
@@ -69,12 +69,18 @@ export default {
       const cases = this.confirmedCases;
       const totalCases = cases[cases.length - 1];
       const previousDayCases = cases[cases.length - 2];
-      return totalCases - previousDayCases
+      return this.numberWithDot(totalCases - previousDayCases)
     },
     confirmedCasesNum() {
       const cases = this.confirmedCases;
       const totalCases = cases[cases.length - 1];
-      return totalCases
+      return this.numberWithDot(totalCases)
+    },
+    numberWithDot(number) {
+      if (!number) {
+        return
+      }
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     },
     initChart() {
       const ctx = document.getElementById(`${this.nation}`);
@@ -111,12 +117,16 @@ export default {
           responsive: true,
           lineTension: 21,
           scales: {
-            yAxes: [{
-              ticks: {
-                beginAtZero: true,
-                padding: 5,
-              }
-            }]
+              xAxes: [{
+                gridLines: {
+                    color: "rgba(0, 0, 0, 0.02)",
+                }
+              }],
+              yAxes: [{
+                gridLines: {
+                  color: "rgba(0, 0, 0, 0.02)",
+                }
+              }]
           }
         }
       });
@@ -126,25 +136,30 @@ export default {
 </script>
 
 <style lang="scss">
+.nation {
+  color: #172c61;
+  font-weight: 500;
+}
 .box {
   align-items: center;
-  border-radius: 20px;
-  border: 1px solid #dedede;
+  border-radius: 12px;
+  border: 1px solid #dfe0e7;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 2rem 0;
-  padding: 1rem .8rem;
+  padding: 1.3rem 1rem;
   text-align: center;
   width: auto;
 
   p {
     margin-bottom: 0 !important;
+    color: #666666;
   }
 
   &__figure {
     font-size: 1.7rem;
-    font-weight: bold;
+    font-weight: 500;
     color: #182C61;
   }
 

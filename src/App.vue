@@ -54,8 +54,8 @@
         </v-row>
       </v-container>
     </v-content>
-    <v-footer color="black" app>
-      <span class="white--text">&copy; 2019</span>
+    <v-footer color="#182C61" app>
+      <span class="white--text">&copy; 2020</span>
     </v-footer>
   </v-app>
 </template>
