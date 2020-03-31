@@ -2,11 +2,14 @@
   <div>
     <h2 class="nation">{{ nation }}</h2>
     <v-row align="center" justify="start">
-      <v-col cols="6" md="3">
-        <InfoBox :detail="'+'+increaseNum()" description="'Last 24h"></InfoBox>
+      <v-col cols="12" md="3">
+        <InfoBox :detail="confirmedCasesNum()" description="Confirmed cases"></InfoBox>
       </v-col>
       <v-col cols="6" md="3">
-        <InfoBox :detail="confirmedCasesNum()" description="Confirmed cases"></InfoBox>
+        <InfoBox :detail="deathsNum()" description="Deaths"></InfoBox>
+      </v-col>
+      <v-col cols="6" md="3">
+        <InfoBox :detail="'+'+increaseNum()" description="Last 24h"></InfoBox>
       </v-col>
     </v-row>
     <canvas :id="nation" ref='chart'></canvas>
@@ -85,6 +88,11 @@ export default {
       const totalCases = cases[cases.length - 1];
       return this.numberWithDot(totalCases)
     },
+    deathsNum() {
+      const deaths = this.deaths;
+      const totaldeaths = deaths[deaths.length - 1];
+      return this.numberWithDot(totaldeaths);
+    },
     numberWithDot(number) {
       if (!number) {
         return
@@ -156,7 +164,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 2rem 0;
+  margin: 0;
   padding: 1.3rem 1rem;
   text-align: center;
   width: auto;
