@@ -5,7 +5,7 @@
       <span class="box__figure">{{ this.confirmedCases[confirmedCases.length - 1] }}</span>
       <p>Confirmed cases</p>
     </div>
-    <canvas :id="nation"></canvas>
+    <canvas :id="nation" ref='chart'></canvas>
   </div>
 </template>
 
@@ -19,29 +19,48 @@ export default {
   data: () => ({
     labels: [],
     confirmedCases: [],
-    deaths: []
+    deaths: [],
+    myChart: ''
   }),
   mounted() {
-    fetch("https://pomber.github.io/covid19/timeseries.json")
-      .then(response => response.json())
-      .then(data => {
-        data[this.$props.nation].forEach(({date, confirmed, deaths}) => {
-          if (date.indexOf('-2-') === -1 && date.indexOf('-1-') === -1) {
-            this.labels.push(date);
-            this.confirmedCases.push(confirmed);
-            this.deaths.push(deaths);
-          }
-        });
-      })
-      .then(() => {
+    this.$store.subscribe((mutation) => {
+      if (mutation.type === 'SET_DATA'){
+        this.setData();
         this.initChart();
-      });
+      }
+      if (mutation.type === 'SET_SELECTED_STATE'){
+        this.replaceData();
+      }
+    })
   },
   methods: {
+    setData() {
+      this.$store.state.data[this.$props.nation].forEach(({date, confirmed, deaths}) => {
+        if (date.indexOf('-2-') === -1 && date.indexOf('-1-') === -1) {
+          this.labels.push(date);
+          this.confirmedCases.push(confirmed);
+          this.deaths.push(deaths);
+        }
+      });
+    },
+    replaceData() {
+      this.labels = [];
+      this.confirmedCases = [];
+      this.deaths = [];
+      this.$store.state.data[this.$store.state.selectedState].forEach(({date, confirmed, deaths}) => {
+        if (date.indexOf('-2-') === -1 && date.indexOf('-1-') === -1) {
+          this.labels.push(date);
+          this.confirmedCases.push(confirmed);
+          this.deaths.push(deaths);
+          this.myChart.destroy();
+          this.initChart();
+        }
+      });
+    },
     initChart() {
-      const ctx = document.getElementById(`${this.$props.nation}`);
+      const ctx = document.getElementById(`${this.nation}`);
       // eslint-disable-next-line
-      const myChart = new Chart(ctx, {
+      this.myChart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: this.labels,
@@ -49,7 +68,7 @@ export default {
               label: 'Deaths',
               data: this.deaths,
               backgroundColor: [
-                'rgb(255, 0, 0)', // red
+                'rgb(255, 0, 0)',
               ],
               borderColor: [
                 '#000',
@@ -60,7 +79,7 @@ export default {
               label: 'Number of Confirmed cases',
               data: this.confirmedCases,
               backgroundColor: [
-                '#e67e22', // Blue
+                '#e67e22',
               ],
               borderColor: [
                 '#36dsad',
@@ -108,7 +127,7 @@ export default {
     &__figure {
       font-size: 1.7rem;
       font-weight: bold;
-      color: #933c0d;
+      color: #182C61;
     }
 }
 </style>

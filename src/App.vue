@@ -13,33 +13,35 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app color="indigo" dark>
+    <v-app-bar app color="#182C61" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>Covid 19 - Data</v-toolbar-title>
     </v-app-bar>
 
     <v-content>
       <v-container fluid>
-        <v-row align="center" justify="center">
+        <v-row align="center" justify="center" v-if="this.getStatus === false">
           <v-col cols="12" md="6">
-            <line-chart nation="United Kingdom"></line-chart>
-          </v-col>
-           <v-col cols="12" md="6">
-            <line-chart nation="Italy"></line-chart>
+            <span v-for="item in states" :key="item.date">
+              <v-combobox
+                :items="item"
+                v-model="select"
+                label="Choose Nation"
+                solo
+                v-on:input="changeNation"
+                autocomplete
+              ></v-combobox>
+            </span>
           </v-col>
         </v-row>
-        <br>
         <v-row align="center" justify="center">
           <v-col cols="12" md="6">
-            <line-chart nation="Spain"></line-chart>
-          </v-col>
-           <v-col cols="12" md="6">
-            <line-chart nation="France"></line-chart>
+            <line-chart :nation="selectedNation"></line-chart>
           </v-col>
         </v-row>
       </v-container>
     </v-content>
-    <v-footer color="indigo" app>
+    <v-footer color="black" app>
       <span class="white--text">&copy; 2019</span>
     </v-footer>
   </v-app>
@@ -56,7 +58,32 @@ import LineChart from './components/LineChart';
       source: String,
     },
     data: () => ({
+      selectedNation: 'United Kingdom',
       drawer: null,
-    })
+      states: []
+    }),
+    beforeMount() {
+      this.$store.dispatch('fetchData');
+      this.$store.subscribe((mutation) => {
+        if (mutation.type === 'SET_DATA') {
+          let statesList = Object.keys(this.getStates);
+          this.states.push(statesList);
+        }
+      })
+    },
+    methods: {
+      changeNation(value) {
+        this.$store.dispatch('changeNation', value);
+        return this.selectedNation = value;
+      }
+    },
+    computed: {
+      getStates () {
+        return this.$store.getters.getData
+      },
+      getStatus () {
+        return this.$store.getters.getStatus
+      }
+    }
   }
 </script>
