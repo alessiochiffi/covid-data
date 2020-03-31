@@ -3,7 +3,7 @@
     <h2 class="nation">{{ nation }}</h2>
     <v-row align="center" justify="start">
       <v-col cols="6" md="3">
-        <InfoBox :detail="'+'+increaseNum()" description="Last 24h"></InfoBox>
+        <InfoBox :detail="'+'+increaseNum()" description="'Last 24h"></InfoBox>
       </v-col>
       <v-col cols="6" md="3">
         <InfoBox :detail="confirmedCasesNum()" description="Confirmed cases"></InfoBox>
@@ -16,6 +16,7 @@
 <script>
 import Chart from 'chart.js';
 import InfoBox from './InfoBox';
+import format from 'date-fns/format';
 
 export default {
   props: {
@@ -45,7 +46,11 @@ export default {
     setData() {
       this.$store.state.data[this.$props.nation].forEach(({date, confirmed, deaths}) => {
         if (date.indexOf('-2-') === -1 && date.indexOf('-1-') === -1) {
-          this.labels.push(date);
+          if (date) {
+            const dateNew = new Date(date);
+            const formattedDate = format(dateNew, 'MMMM dd');
+            this.labels.push(formattedDate);
+          }
           this.confirmedCases.push(confirmed);
           this.deaths.push(deaths);
         }
@@ -57,7 +62,11 @@ export default {
       this.deaths = [];
       this.$store.state.data[this.$store.state.selectedState].forEach(({date, confirmed, deaths}) => {
         if (date.indexOf('-2-') === -1 && date.indexOf('-1-') === -1) {
-          this.labels.push(date);
+          if (date) {
+            const dateNew = new Date(date);
+            const formattedDate = format(dateNew, 'MMMM dd');
+            this.labels.push(formattedDate);
+          }
           this.confirmedCases.push(confirmed);
           this.deaths.push(deaths);
           this.myChart.destroy();
@@ -93,7 +102,7 @@ export default {
               label: 'Deaths',
               data: this.deaths,
               backgroundColor: [
-                'rgb(255, 0, 0)',
+                'rgba(255, 0, 0)',
               ],
               borderColor: [
                 '#000',
@@ -110,8 +119,7 @@ export default {
                 '#36dsad',
               ],
               borderWidth: 1
-            }
-          ]
+            }]
         },
         options: {
           responsive: true,
@@ -139,6 +147,7 @@ export default {
 .nation {
   color: #172c61;
   font-weight: 500;
+  margin-left: 1rem;
 }
 .box {
   align-items: center;

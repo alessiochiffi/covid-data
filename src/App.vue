@@ -39,7 +39,7 @@
               <v-combobox
                 :items="item"
                 v-model="select"
-                label="Choose Nation"
+                label="Enter or select nation"
                 solo
                 v-on:input="changeNation"
                 autocomplete
