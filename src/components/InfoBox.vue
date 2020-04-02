@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <span class="box__figure">{{ detail }}</span>
+    <span class="box__figure">{{ detail === '+undefined' || '' ? '' : detail }}</span>
     <p>{{ description }}</p>
   </div>
 </template>

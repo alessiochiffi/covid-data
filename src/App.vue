@@ -32,8 +32,9 @@
     </v-app-bar>
 
     <v-content>
+    <div>
       <v-container fluid>
-        <v-row align="center" justify="center" class="search-section" v-if="this.getStatus === false">
+        <v-row align="center" justify="center" class="search-section">
           <v-col cols="12" md="6">
             <span v-for="item in states" :key="item.date">
               <v-combobox
@@ -53,6 +54,7 @@
           </v-col>
         </v-row>
       </v-container>
+    </div>
     </v-content>
     <v-footer color="#182C61" app>
       <span class="white--text">&copy; 2020</span>
@@ -74,11 +76,7 @@ import LineChart from './components/LineChart';
       selectedNation: 'United Kingdom',
       drawer: false,
       states: [],
-      items: [
-          { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-          { title: 'Photos', icon: 'mdi-image' },
-          { title: 'About', icon: 'mdi-help-box' },
-        ],
+      isLoading: true,
         color: 'primary',
         colors: [
           'primary',
@@ -98,6 +96,9 @@ import LineChart from './components/LineChart';
         if (mutation.type === 'SET_DATA') {
           let statesList = Object.keys(this.getStates);
           this.states.push(statesList);
+        }
+        if (mutation.type === 'SET_LOADING_STATE') {
+          this.isLoading = false;
         }
       })
     },
