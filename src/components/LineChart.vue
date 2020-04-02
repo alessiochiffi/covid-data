@@ -172,8 +172,10 @@ export default {
   width: auto;
 
   p {
-    margin-bottom: 0 !important;
     color: #666666;
+    font-size: 12px;
+    margin-bottom: 0;
+    text-transform: uppercase;
   }
 
   &__figure {
